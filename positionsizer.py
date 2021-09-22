@@ -1,8 +1,7 @@
 import time
-from TradeManagementSystem import getSL
 
-risk = 0.0087
-portfolio_value = 6450
+risk = 0.01
+portfolio_value = 6900
 max_risk = portfolio_value * risk
 
 
@@ -17,6 +16,9 @@ class Trade:
 
 
     def get_trade_info(self):
+
+        tradeInfo = []
+
         # calculate risk per unit
         cents_at_risk = (float(self.ote) - float(self.sl))
 
@@ -32,21 +34,29 @@ class Trade:
 
 # Tells me how position should be divided & risk levels
         if (ideal_position_size*float(self.ote)) < portfolio_value:
-            print("\nIdeal Position Size: " + str(round(ideal_position_size, 2)))
+            PSMessage = "\nIdeal Position Size: " + str(round(ideal_position_size, 2))
+            tradeInfo.append(PSMessage)
+
             time.sleep(1)
 
             if (v1 + v2 + v3) > ideal_position_size:
                 v3 = v3
-                print("Position should be split: " + str(v1) + ", " + str(v2) + ", " + str(v3) + " ")
+                splitMessage= "Position should be split: " + str(v1) + ", " + str(v2) + ", " + str(v3) + " "
+                tradeInfo.append(splitMessage)
+
 
             else:
-                print("Position should be split: " + str(v1) + ", " + str(v2) + ", " + str(v3) + " ")
+                splitMessage = "Position should be split: " + str(v1) + ", " + str(v2) + ", " + str(v3) + " "
+                tradeInfo.append(splitMessage)
 
 
             time.sleep(1)
-            print("\nPortfolio Risk from Trade: " + str(trade_risk) + "%")
+            riskMessage = "\nPortfolio Risk from Trade: " + str(trade_risk) + "%"
+            tradeInfo.append(riskMessage)
+
             time.sleep(1)
-            print("Risk in USD: " + "$" + str(round(usd_risk, 2)))
+            USDriskMSG = "Risk in USD: " + "$" + str(round(usd_risk, 2))
+            tradeInfo.append(USDriskMSG)
 
 # Calculate Risk Reward
             time.sleep(1)
@@ -54,12 +64,20 @@ class Trade:
             total_reward = ((float(self.t1) - float(self.ote)) * v1) + ((float(self.t2) - float(self.ote)) * v2) + ((
                         float(self.t3) - float(self.ote)) * v3)
             risk_reward = (round(total_reward / total_risk, 2))
-            print("\nRisk Reward Ratio:  " + "1:" + str(risk_reward))
-            print("Return: " + "$" + str(round(total_reward, 2)))
+            RRMessage = "\nRisk Reward Ratio:  " + "1:" + str(risk_reward)
+            tradeInfo.append(RRMessage)
+
+
+            returnMessage = "Return: " + "$" + str(round(total_reward, 2))
+            tradeInfo.append(returnMessage)
 
         else:
-            print("\nInsufficient funds to open trade")
+            noFundsMSG = "\nInsufficient funds to open trade"
+            tradeInfo.append(noFundsMSG)
 
 
-getSL()
+        return tradeInfo
+
+
+
 
